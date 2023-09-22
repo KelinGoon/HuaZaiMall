@@ -31,7 +31,7 @@
             prop="ProductName"
           >
             <el-input
-              v-model="form.site_name"
+              v-model="form.ProductName"
               autocomplete="off"
               placeholder="请输入商品名称"
             />
@@ -42,7 +42,7 @@
             prop="ProductPrice"
           >
             <el-input
-              v-model="form.site_url"
+              v-model.number="form.ProductPrice"
               autocomplete="off"
               placeholder="请输入商品定价"
             />
@@ -53,7 +53,7 @@
             prop="ProductStock"
           >
             <el-input
-              v-model="form.ProductStock"
+              v-model.number="form.ProductStock"
               autocomplete="off"
               placeholder="请输入商品库存数量"
             />
@@ -75,7 +75,7 @@
             prop="CategoryID"
           >
             <el-input
-              v-model="form.CategoryID"
+              v-model.number="form.CategoryID"
               autocomplete="off"
               placeholder="请输入商品属于什么类别"
             />
@@ -168,34 +168,56 @@
           <el-form-item
             :label-width="formLabelWidth"
             label="商品名称"
-            prop="site_name"
+            prop="ProductName"
           >
             <el-input
               v-model="form.ProductName"
               autocomplete="off"
-              placeholder="请输入网站名称"
+              placeholder="请输入商品名称"
             />
           </el-form-item>
           <el-form-item
             :label-width="formLabelWidth"
-            label="网站URL"
-            prop="site_url"
+            label="商品定价"
+            prop="ProductPrice"
           >
             <el-input
-              v-model="form.site_url"
+              v-model.number="form.ProductPrice"
               autocomplete="off"
-              placeholder="请输入网站URL"
+              placeholder="请输入商品定价"
             />
           </el-form-item>
           <el-form-item
             :label-width="formLabelWidth"
-            label="程序文件名"
-            prop="proce_file_name"
+            label="商品库存"
+            prop="ProductStock"
           >
             <el-input
-              v-model="form.proce_file_name"
+              v-model.number="form.ProductStock"
               autocomplete="off"
-              placeholder="请输入程序文件名"
+              placeholder="请输入商品库存数量"
+            />
+          </el-form-item>
+          <el-form-item
+            :label-width="formLabelWidth"
+            label="商品描述"
+            prop="ProductDescription"
+          >
+            <el-input
+              v-model="form.ProductDescription"
+              autocomplete="off"
+              placeholder="请对商品进行描述"
+            />
+          </el-form-item>
+          <el-form-item
+            :label-width="formLabelWidth"
+            label="商品类别"
+            prop="CategoryID"
+          >
+            <el-input
+              v-model.number="form.CategoryID"
+              autocomplete="off"
+              placeholder="请输入商品属于什么类别"
             />
           </el-form-item>
         </el-form>
@@ -252,18 +274,12 @@ export default {
       pageNum: 1,
       total: 0,
       form: {
-        id: 0,
-        site_name: '',
-        site_url: '',
-        proce_file_name: '',
         // 产品的form
-        ProductID: '',
         ProductName: '',
         ProductPrice: '',
         ProductStock: '',
         ProductDescription: '',
-        CategoryID: '',
-        SellerID: ''
+        CategoryID: 0
       },
       // 表单数据校验规则
       rules: {
@@ -272,8 +288,7 @@ export default {
           { min: 3, message: '长度不得小于 3 个字符', trigger: 'blur' }
         ],
         ProductPrice: [
-          { required: true, message: '请输入商品价格', trigger: 'blur' },
-          { min: 3, message: '长度不得小于 3 个字符', trigger: 'blur' }
+          { required: true, message: '请输入商品库存量', trigger: 'blur' }
         ],
         ProductStock: [
           { required: true, message: '请输入商品库存量', trigger: 'blur' }
@@ -291,6 +306,7 @@ export default {
     this.fetchData()
   },
   methods: {
+    // get函数
     fetchData() {
       this.listLoading = true
       getList().then(response => {
@@ -315,14 +331,16 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.isLoading = true
-          this.$store.dispatch('api/addList', this.form).then((res) => {
-            if (res.code === 0) {
+          this.$store.dispatch('product/addList', this.form).then((res) => {
+            console.log(res)
+            if (res.status_code === 0) {
               this.dialogAddFormVisible = false
-              this.$message.success(res.msg)
+              this.$message.success(res.status_msg)
+              console.log('dfsdfdsfdsfd')
               this.form = {}
               this.fetchData()
             } else {
-              this.$message.error(res.msg)
+              this.$message.error(res.status_msg)
             }
           })
           this.isLoading = false

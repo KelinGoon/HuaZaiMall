@@ -1,24 +1,14 @@
 // get user info
-import { getInfo } from '@/api/user'
+import { addList } from '@/api/product'
 
 const actions = {
   // 这里是add商品信息
-  getInfo({ commit, state }) {
+  addList({ commit }, data) {
+    console.log(this.state)
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
+      addList(data).then(response => {
         console.log(response)
-        const { user_list } = response
-        console.log(user_list)
-
-        if (!user_list) {
-          return reject('Verification failed, please Login again.')
-        }
-
-        const { name, avatar } = user_list
-
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        resolve(user_list)
+        resolve(response)
       }).catch(error => {
         reject(error)
       })
