@@ -4,7 +4,6 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"singo/module/response"
 
-	"net/http"
 	"strings"
 	"time"
 
@@ -61,7 +60,7 @@ func JwtRequired() gin.HandlerFunc {
 			if err != nil || token.Valid != true {
 
 				// 过期或者非正确处理
-				c.JSON(http.StatusOK, response.ErrorResponse(response.CodeTokenExpiredError))
+				//c.JSON(http.StatusOK, response.ErrorResponse(response.CodeTokenExpiredError))
 				response.ErrRespWithMsg(c, "token已过期")
 				c.Abort()
 				return

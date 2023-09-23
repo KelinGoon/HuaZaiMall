@@ -15,7 +15,7 @@ func AddProductGroup(r *gin.RouterGroup) {
 		jwtGroup.Use(jwt.JwtRequired())
 		{
 			// 查看指定商家的商品信息
-			jwtGroup.GET("/info", service.ProductInfo)
+			jwtGroup.GET("/info/:pagesize/:pagenum", service.ProductInfo)
 			// 添加商品
 			jwtGroup.POST("/add", service.AddProduct)
 			// 删除商品

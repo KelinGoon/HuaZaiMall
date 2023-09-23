@@ -6,11 +6,11 @@ import (
 )
 
 // ProductInfoById 根据店铺id查询商品列表
-func ProductInfoById(ID int64) ([]*model.Product, error) {
-	//var product model.Product
+func ProductInfoById(page SitePaginationSelectModel) (int64, []*model.Product, error) {
 	q := query.Product
-	product, err := q.Where(q.SellerID.Eq(ID)).Find()
-	return product, err
+	total, _ := q.Where(q.SellerID.Eq(int64(page.UserId))).Count()
+	product, err := q.Where(q.SellerID.Eq(int64(page.UserId))).Limit(page.PageSize).Offset((page.PageNum - 1) * page.PageSize).Find()
+	return total, product, err
 }
 
 func AddProductInfo(product model.Product) error {
@@ -27,6 +27,15 @@ func DeleteProductInfo(ID int64) (err error) {
 
 func ChangeProductInfo(product model.Product) (err error) {
 	q := query.Product
-	_, err = q.Where(q.ProductID.Eq(product.ProductID)).Update(q.ALL, product)
+	_, err = q.Where(q.ProductID.Eq(product.ProductID)).Updates(model.Product{
+		ProductName:        product.ProductName,
+		ProductDescription: product.ProductDescription,
+		ProductPrice:       product.ProductPrice,
+		ProductImageURL:    product.ProductImageURL,
+		ProductStock:       product.ProductStock,
+		CreationDate:       product.CreationDate,
+		UpdateDate:         product.UpdateDate,
+		CategoryID:         product.CategoryID,
+	})
 	return err
 }
