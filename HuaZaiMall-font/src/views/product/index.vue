@@ -7,7 +7,7 @@
           justify="space-between"
           type="flex"
         >
-          <el-col :span="8"><span style="font-size: 20px;">商品管理</span></el-col>
+          <el-col :span="8"><span style="font-size: 24px;">商品管理</span></el-col>
           <el-col :span="2">
             <el-button
               :loading="isLoading"
@@ -247,7 +247,6 @@
 </template>
 
 <script>
-import { getList } from '@/api/product'
 
 export default {
   filters: {
@@ -279,6 +278,7 @@ export default {
         ProductPrice: '',
         ProductStock: '',
         ProductDescription: '',
+        UpdateDate: new Date(),
         CategoryID: 0
       },
       // 表单数据校验规则
@@ -303,25 +303,42 @@ export default {
     }
   },
   created() {
-    this.fetchData()
+    this.getProduct()
   },
   methods: {
-    // get函数
-    fetchData() {
-      this.listLoading = true
-      getList().then(response => {
-        this.list = response.data
-        this.listLoading = false
-      })
+    // // get函数
+    // getProduct() {
+    //   this.listLoading = true
+    //   getList().then(response => {
+    //     this.list = response.data
+    //     this.listLoading = false
+    //   })
+    // },
+    getProduct() {
+      this.$store
+        .dispatch('product/getList', {
+          pagesize: this.pageSize,
+          pagenum: this.pageNum
+        })
+        .then((res) => {
+          if (res.status_code === 0) {
+            const { data } = res
+            this.list = data
+            this.total = res.total
+            this.listLoading = false
+          } else {
+            this.$message.error(res.status_msg)
+          }
+        })
     },
     // 分页控件函数--start
     handleSizeChange(val) {
       this.pageSize = val
-      this.getSiteInfo()
+      this.getProduct()
     },
     handleCurrentChange(val) {
       this.pageNum = val
-      this.getSiteInfo()
+      this.getProduct()
     },
     // 分页控件函数--end
     Add() {
@@ -338,7 +355,7 @@ export default {
               this.$message.success(res.status_msg)
               console.log('dfsdfdsfdsfd')
               this.form = {}
-              this.fetchData()
+              this.getProduct()
             } else {
               this.$message.error(res.status_msg)
             }
@@ -360,21 +377,22 @@ export default {
     },
     handleCancel() {
       this.dialogFormVisible = false
-      this.getSiteInfo()
+      this.getProduct()
       this.form = {}
       this.$message.info('取消编辑')
     },
     handleSave(index, row) {
       this.$refs['form'].validate((valid) => {
+        this.form.UpdateDate = new Date() // 使用浏览器默认的本地化格式
         if (valid) {
           this.isLoading = true
-          this.$store.dispatch('site/updateSiteInfo', this.form).then((res) => {
-            if (res.code === 0) {
-              this.$message.success(res.msg)
+          this.$store.dispatch('product/UpdateList', this.form).then((res) => {
+            if (res.status_code === 0) {
+              this.$message.success(res.status_msg)
               this.dialogFormVisible = false
               this.form = {}
             } else {
-              this.$message.error(res.msg)
+              this.$message.error(res.status_msg)
             }
             this.isLoading = false
           })
@@ -385,11 +403,9 @@ export default {
     },
     handleDelete(index, row) {
       this.$confirm(
-        '此操作将删除网站：' +
-        row.site_name +
-        '(' +
-        row.site_url +
-        ')  是否继续?',
+        '此操作将删除商品：' +
+        row.ProductName +
+        ' 是否继续?',
         '提示',
         {
           confirmButtonText: '确定',
@@ -398,13 +414,13 @@ export default {
         }
       )
         .then(() => {
-          this.$store.dispatch('site/delSiteInfo', row).then((res) => {
-            if (res.code === 0) {
-              this.$message.success(res.msg)
+          this.$store.dispatch('product/DeleteList', row).then((res) => {
+            if (res.status_code === 0) {
+              this.$message.success(res.status_msg)
               this.dialogFormVisible = false
-              this.getSiteInfo()
+              this.getProduct()
             } else {
-              this.$message.error(res.msg)
+              this.$message.error(res.status_msg)
             }
           })
         })

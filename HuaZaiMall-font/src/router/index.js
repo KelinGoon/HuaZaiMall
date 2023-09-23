@@ -1,10 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
-Vue.use(Router)
-
 /* Layout */
 import Layout from '@/layout'
+
+Vue.use(Router)
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -56,23 +55,49 @@ export const constantRoutes = [
   },
 
   {
-    path: '/example',
+    path: '/product',
     component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: '示例', icon: 'el-icon-s-help' },
+    redirect: '/example/product',
+    // name: 'Example',
+    // meta: { title: '商品管理', icon: 'el-icon-s-help' },
     children: [
       {
         path: 'table',
         name: 'table',
-        component: () => import('@/views/table/index'),
+        component: () => import('@/views/product/index'),
         meta: { title: '商品管理', icon: 'table' }
-      },
+      }
+    ]
+  },
+
+  {
+    path: '/order',
+    component: Layout,
+    redirect: '/example/order',
+    // name: 'Example',
+    // meta: { title: '商品管理', icon: 'el-icon-s-help' },
+    children: [
       {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree树', icon: 'tree' }
+        path: 'table',
+        name: 'table',
+        component: () => import('@/views/order/index'),
+        meta: { title: '订单管理', icon: 'form' }
+      }
+    ]
+  },
+
+  {
+    path: '/review',
+    component: Layout,
+    redirect: '/example/order',
+    // name: 'Example',
+    // meta: { title: '商品管理', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'table',
+        name: 'table',
+        component: () => import('@/views/order/index'),
+        meta: { title: '商品评论', icon: 'form' }
       }
     ]
   },
@@ -139,6 +164,12 @@ export const constantRoutes = [
             meta: { title: 'Menu1-3' }
           }
         ]
+      },
+      {
+        path: 'tree',
+        name: 'Tree',
+        component: () => import('@/views/tree/index'),
+        meta: { title: 'Tree树', icon: 'tree' }
       },
       {
         path: 'menu2',
