@@ -30,6 +30,7 @@ func newReview(db *gorm.DB) review {
 	_review.ReviewID = field.NewInt64(tableName, "ReviewID")
 	_review.UserID = field.NewInt64(tableName, "UserID")
 	_review.ProductID = field.NewInt64(tableName, "ProductID")
+	_review.OrderID = field.NewInt64(tableName, "OrderID")
 	_review.ReviewContent = field.NewString(tableName, "ReviewContent")
 	_review.Rating = field.NewInt64(tableName, "Rating")
 	_review.ReviewDate = field.NewTime(tableName, "ReviewDate")
@@ -46,6 +47,7 @@ type review struct {
 	ReviewID      field.Int64  // 评论唯一标识符
 	UserID        field.Int64  // 发表评论的用户ID，外键指向用户表
 	ProductID     field.Int64  // 被评论的商品ID，外键指向商品表
+	OrderID       field.Int64  // 订单ID，外键指向订单表
 	ReviewContent field.String // 评论内容
 	Rating        field.Int64  // 评论的评分
 	ReviewDate    field.Time   // 评论的创建日期，默认为当前时间戳
@@ -68,6 +70,7 @@ func (r *review) updateTableName(table string) *review {
 	r.ReviewID = field.NewInt64(table, "ReviewID")
 	r.UserID = field.NewInt64(table, "UserID")
 	r.ProductID = field.NewInt64(table, "ProductID")
+	r.OrderID = field.NewInt64(table, "OrderID")
 	r.ReviewContent = field.NewString(table, "ReviewContent")
 	r.Rating = field.NewInt64(table, "Rating")
 	r.ReviewDate = field.NewTime(table, "ReviewDate")
@@ -87,10 +90,11 @@ func (r *review) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (r *review) fillFieldMap() {
-	r.fieldMap = make(map[string]field.Expr, 6)
+	r.fieldMap = make(map[string]field.Expr, 7)
 	r.fieldMap["ReviewID"] = r.ReviewID
 	r.fieldMap["UserID"] = r.UserID
 	r.fieldMap["ProductID"] = r.ProductID
+	r.fieldMap["OrderID"] = r.OrderID
 	r.fieldMap["ReviewContent"] = r.ReviewContent
 	r.fieldMap["Rating"] = r.Rating
 	r.fieldMap["ReviewDate"] = r.ReviewDate

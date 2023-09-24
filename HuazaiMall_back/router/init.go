@@ -18,9 +18,9 @@ func SetupRouter() *gin.Engine {
 	apiGroup := r.Group("/")
 	{
 		//访问各个路由组，展开程序
-		//AddPlatformGroup(apiGroup)
 		AddUserGroup(apiGroup)
 		AddProductGroup(apiGroup)
+		AddOrderGroup(apiGroup)
 		//AddRecordGroup(apiGroup)
 		//AddTickerGroup(apiGroup)
 		//AddRecordTagGroup(apiGroup)

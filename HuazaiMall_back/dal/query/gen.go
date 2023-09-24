@@ -12,13 +12,14 @@ import (
 )
 
 var (
-	Q        = new(Query)
-	Cart     *cart
-	Category *category
-	Order    *order
-	Product  *product
-	Review   *review
-	User     *user
+	Q         = new(Query)
+	Cart      *cart
+	Category  *category
+	Order     *order
+	Orderitem *orderitem
+	Product   *product
+	Review    *review
+	User      *user
 )
 
 func SetDefault(db *gorm.DB) {
@@ -26,6 +27,7 @@ func SetDefault(db *gorm.DB) {
 	Cart = &Q.Cart
 	Category = &Q.Category
 	Order = &Q.Order
+	Orderitem = &Q.Orderitem
 	Product = &Q.Product
 	Review = &Q.Review
 	User = &Q.User
@@ -33,58 +35,63 @@ func SetDefault(db *gorm.DB) {
 
 func Use(db *gorm.DB) *Query {
 	return &Query{
-		db:       db,
-		Cart:     newCart(db),
-		Category: newCategory(db),
-		Order:    newOrder(db),
-		Product:  newProduct(db),
-		Review:   newReview(db),
-		User:     newUser(db),
+		db:        db,
+		Cart:      newCart(db),
+		Category:  newCategory(db),
+		Order:     newOrder(db),
+		Orderitem: newOrderitem(db),
+		Product:   newProduct(db),
+		Review:    newReview(db),
+		User:      newUser(db),
 	}
 }
 
 type Query struct {
 	db *gorm.DB
 
-	Cart     cart
-	Category category
-	Order    order
-	Product  product
-	Review   review
-	User     user
+	Cart      cart
+	Category  category
+	Order     order
+	Orderitem orderitem
+	Product   product
+	Review    review
+	User      user
 }
 
 func (q *Query) Available() bool { return q.db != nil }
 
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
-		db:       db,
-		Cart:     q.Cart.clone(db),
-		Category: q.Category.clone(db),
-		Order:    q.Order.clone(db),
-		Product:  q.Product.clone(db),
-		Review:   q.Review.clone(db),
-		User:     q.User.clone(db),
+		db:        db,
+		Cart:      q.Cart.clone(db),
+		Category:  q.Category.clone(db),
+		Order:     q.Order.clone(db),
+		Orderitem: q.Orderitem.clone(db),
+		Product:   q.Product.clone(db),
+		Review:    q.Review.clone(db),
+		User:      q.User.clone(db),
 	}
 }
 
 type queryCtx struct {
-	Cart     ICartDo
-	Category ICategoryDo
-	Order    IOrderDo
-	Product  IProductDo
-	Review   IReviewDo
-	User     IUserDo
+	Cart      ICartDo
+	Category  ICategoryDo
+	Order     IOrderDo
+	Orderitem IOrderitemDo
+	Product   IProductDo
+	Review    IReviewDo
+	User      IUserDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		Cart:     q.Cart.WithContext(ctx),
-		Category: q.Category.WithContext(ctx),
-		Order:    q.Order.WithContext(ctx),
-		Product:  q.Product.WithContext(ctx),
-		Review:   q.Review.WithContext(ctx),
-		User:     q.User.WithContext(ctx),
+		Cart:      q.Cart.WithContext(ctx),
+		Category:  q.Category.WithContext(ctx),
+		Order:     q.Order.WithContext(ctx),
+		Orderitem: q.Orderitem.WithContext(ctx),
+		Product:   q.Product.WithContext(ctx),
+		Review:    q.Review.WithContext(ctx),
+		User:      q.User.WithContext(ctx),
 	}
 }
 

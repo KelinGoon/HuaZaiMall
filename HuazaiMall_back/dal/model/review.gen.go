@@ -15,6 +15,7 @@ type Review struct {
 	ReviewID      int64     `gorm:"column:ReviewID;type:int(11);primaryKey;autoIncrement:true" json:"ReviewID"`            // 评论唯一标识符
 	UserID        int64     `gorm:"column:UserID;type:int(11)" json:"UserID"`                                              // 发表评论的用户ID，外键指向用户表
 	ProductID     int64     `gorm:"column:ProductID;type:int(11)" json:"ProductID"`                                        // 被评论的商品ID，外键指向商品表
+	OrderID       int64     `gorm:"column:OrderID;type:int(11)" json:"OrderID"`                                            // 订单ID，外键指向订单表
 	ReviewContent string    `gorm:"column:ReviewContent;type:text;not null" json:"ReviewContent"`                          // 评论内容
 	Rating        int64     `gorm:"column:Rating;type:int(11)" json:"Rating"`                                              // 评论的评分
 	ReviewDate    time.Time `gorm:"column:ReviewDate;type:timestamp;not null;default:CURRENT_TIMESTAMP" json:"ReviewDate"` // 评论的创建日期，默认为当前时间戳

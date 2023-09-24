@@ -31,6 +31,7 @@ func newCart(db *gorm.DB) cart {
 	_cart.UserID = field.NewInt64(tableName, "UserID")
 	_cart.ProductID = field.NewInt64(tableName, "ProductID")
 	_cart.Quantity = field.NewInt64(tableName, "Quantity")
+	_cart.Status = field.NewString(tableName, "Status")
 	_cart.CreationDate = field.NewTime(tableName, "CreationDate")
 
 	_cart.fillFieldMap()
@@ -42,11 +43,12 @@ type cart struct {
 	cartDo
 
 	ALL          field.Asterisk
-	CartID       field.Int64 // 购物车条目唯一标识符
-	UserID       field.Int64 // 用户ID，购物车所属用户的外键
-	ProductID    field.Int64 // 商品ID，购物车中商品的外键
-	Quantity     field.Int64 // 购物车中商品的数量
-	CreationDate field.Time  // 购物车条目创建日期，默认为当前时间戳
+	CartID       field.Int64  // 购物车条目唯一标识符
+	UserID       field.Int64  // 用户ID，购物车所属用户的外键
+	ProductID    field.Int64  // 商品ID，购物车中商品的外键
+	Quantity     field.Int64  // 购物车中商品的数量
+	Status       field.String // 购物车商品状态，可以是 "未下单" 或 "已下单"
+	CreationDate field.Time   // 购物车条目创建日期，默认为当前时间戳
 
 	fieldMap map[string]field.Expr
 }
@@ -67,6 +69,7 @@ func (c *cart) updateTableName(table string) *cart {
 	c.UserID = field.NewInt64(table, "UserID")
 	c.ProductID = field.NewInt64(table, "ProductID")
 	c.Quantity = field.NewInt64(table, "Quantity")
+	c.Status = field.NewString(table, "Status")
 	c.CreationDate = field.NewTime(table, "CreationDate")
 
 	c.fillFieldMap()
@@ -84,11 +87,12 @@ func (c *cart) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *cart) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 5)
+	c.fieldMap = make(map[string]field.Expr, 6)
 	c.fieldMap["CartID"] = c.CartID
 	c.fieldMap["UserID"] = c.UserID
 	c.fieldMap["ProductID"] = c.ProductID
 	c.fieldMap["Quantity"] = c.Quantity
+	c.fieldMap["Status"] = c.Status
 	c.fieldMap["CreationDate"] = c.CreationDate
 }
 
