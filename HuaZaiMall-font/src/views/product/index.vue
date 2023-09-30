@@ -7,7 +7,7 @@
           justify="space-between"
           type="flex"
         >
-          <el-col :span="8"><span style="font-size: 24px;">商品管理</span></el-col>
+          <el-col :span="8"><span style="font-size: 20px;">商品管理</span></el-col>
           <el-col :span="2">
             <el-button
               :loading="isLoading"
@@ -31,7 +31,7 @@
             prop="ProductName"
           >
             <el-input
-              v-model="form.ProductName"
+              v-model="form.productName"
               autocomplete="off"
               placeholder="请输入商品名称"
             />
@@ -42,7 +42,7 @@
             prop="ProductPrice"
           >
             <el-input
-              v-model.number="form.ProductPrice"
+              v-model.number="form.productPrice"
               autocomplete="off"
               placeholder="请输入商品定价"
             />
@@ -53,7 +53,7 @@
             prop="ProductStock"
           >
             <el-input
-              v-model.number="form.ProductStock"
+              v-model.number="form.productStock"
               autocomplete="off"
               placeholder="请输入商品库存数量"
             />
@@ -64,7 +64,7 @@
             prop="ProductDescription"
           >
             <el-input
-              v-model="form.ProductDescription"
+              v-model="form.productDescription"
               autocomplete="off"
               placeholder="请对商品进行描述"
             />
@@ -75,7 +75,7 @@
             prop="CategoryID"
           >
             <el-input
-              v-model.number="form.CategoryID"
+              v-model.number="form.categoryId"
               autocomplete="off"
               placeholder="请输入商品属于什么类别"
             />
@@ -104,41 +104,41 @@
       >
         <el-table-column align="center" label="产品名">
           <template slot-scope="scope">
-            {{ scope.row.ProductName }}
+            {{ scope.row.productName }}
           </template>
         </el-table-column>
         <el-table-column align="center" label="产品描述" width="230">
           <template slot-scope="scope">
-            <span>{{ scope.row.ProductDescription }}</span>
+            <span>{{ scope.row.productDescription }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="价格/元" width="110">
           <template slot-scope="scope">
-            <span>{{ scope.row.ProductPrice }}</span>
+            <span>{{ scope.row.productPrice }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="库存" width="110">
           <template slot-scope="scope">
-            <span>{{ scope.row.ProductStock }}</span>
+            <span>{{ scope.row.productStock }}</span>
           </template>
         </el-table-column>
-        <el-table-column :formatter="formatDate" align="center" label="创建时间" width="170">
+        <el-table-column :formatter="formatDate()" align="center" label="创建时间" width="170">
           <template slot-scope="scope">
             <span>{{
-              new Date(scope.row.CreationDate).toLocaleString('zh', { hour12: false }).replaceAll('/', '-')
+              new Date(scope.row.creationDate).toLocaleString('zh', { hour12: false }).replaceAll('/', '-')
             }}</span>
           </template>
         </el-table-column>
         <el-table-column :formatter="formatDate" align="center" label="更新时间" width="170">
           <template slot-scope="scope">
             <span>{{
-              new Date(scope.row.UpdateDate).toLocaleString('zh', { hour12: false }).replaceAll('/', '-')
+              new Date(scope.row.updateDate).toLocaleString('zh', { hour12: false }).replaceAll('/', '-')
             }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="产品类别" width="110">
           <template slot-scope="scope">
-            <span>{{ scope.row.CategoryID }}</span>
+            <span>{{ scope.row.categoryId }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作" width="150">
@@ -171,7 +171,7 @@
             prop="ProductName"
           >
             <el-input
-              v-model="form.ProductName"
+              v-model="form.productName"
               autocomplete="off"
               placeholder="请输入商品名称"
             />
@@ -182,7 +182,7 @@
             prop="ProductPrice"
           >
             <el-input
-              v-model.number="form.ProductPrice"
+              v-model.number="form.productPrice"
               autocomplete="off"
               placeholder="请输入商品定价"
             />
@@ -193,7 +193,7 @@
             prop="ProductStock"
           >
             <el-input
-              v-model.number="form.ProductStock"
+              v-model.number="form.productStock"
               autocomplete="off"
               placeholder="请输入商品库存数量"
             />
@@ -204,7 +204,7 @@
             prop="ProductDescription"
           >
             <el-input
-              v-model="form.ProductDescription"
+              v-model="form.productDescription"
               autocomplete="off"
               placeholder="请对商品进行描述"
             />
@@ -215,7 +215,7 @@
             prop="CategoryID"
           >
             <el-input
-              v-model.number="form.CategoryID"
+              v-model.number="form.categoryId"
               autocomplete="off"
               placeholder="请输入商品属于什么类别"
             />
@@ -247,6 +247,8 @@
 </template>
 
 <script>
+
+import { formatDate } from 'element-ui'
 
 export default {
   filters: {
@@ -306,6 +308,9 @@ export default {
     this.getProduct()
   },
   methods: {
+    formatDate() {
+      return formatDate
+    },
     // // get函数
     // getProduct() {
     //   this.listLoading = true
@@ -321,13 +326,13 @@ export default {
           pagenum: this.pageNum
         })
         .then((res) => {
-          if (res.status_code === 0) {
+          if (res.code === 0) {
             const { data } = res
             this.list = data
             this.total = res.total
             this.listLoading = false
           } else {
-            this.$message.error(res.status_msg)
+            this.$message.error(res.msg)
           }
         })
     },
@@ -350,14 +355,14 @@ export default {
           this.isLoading = true
           this.$store.dispatch('product/addList', this.form).then((res) => {
             console.log(res)
-            if (res.status_code === 0) {
+            if (res.code === 0) {
               this.dialogAddFormVisible = false
-              this.$message.success(res.status_msg)
+              this.$message.success(res.msg)
               console.log('dfsdfdsfdsfd')
               this.form = {}
               this.getProduct()
             } else {
-              this.$message.error(res.status_msg)
+              this.$message.error(res.msg)
             }
           })
           this.isLoading = false
@@ -387,12 +392,12 @@ export default {
         if (valid) {
           this.isLoading = true
           this.$store.dispatch('product/UpdateList', this.form).then((res) => {
-            if (res.status_code === 0) {
-              this.$message.success(res.status_msg)
+            if (res.code === 0) {
+              this.$message.success(res.msg)
               this.dialogFormVisible = false
               this.form = {}
             } else {
-              this.$message.error(res.status_msg)
+              this.$message.error(res.msg)
             }
             this.isLoading = false
           })
@@ -415,12 +420,12 @@ export default {
       )
         .then(() => {
           this.$store.dispatch('product/DeleteList', row).then((res) => {
-            if (res.status_code === 0) {
-              this.$message.success(res.status_msg)
+            if (res.code === 0) {
+              this.$message.success(res.msg)
               this.dialogFormVisible = false
               this.getProduct()
             } else {
-              this.$message.error(res.status_msg)
+              this.$message.error(res.msg)
             }
           })
         })

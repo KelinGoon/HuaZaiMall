@@ -1,5 +1,5 @@
-import { login, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getInfo, login } from '@/api/user'
+import { getToken, removeToken, setToken } from '@/utils/auth'
 
 const getDefaultState = () => {
   return {
@@ -31,10 +31,10 @@ const actions = {
   login({ commit }, userInfo) {
     const { account, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ account: account.trim(), password: password }).then(response => {
+      login({ username: account.trim(), password: password }).then(response => {
         // const { data } = response
-        commit('SET_TOKEN', response.token)
-        setToken(response.token)
+        commit('SET_TOKEN', response.data)
+        setToken(response.data)
         resolve()
       }).catch(error => {
         reject(error)
@@ -47,18 +47,18 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         console.log(response)
-        const { user_list } = response
-        console.log(user_list)
+        const res = response.data
+        console.log(res)
 
-        if (!user_list) {
+        if (!res) {
           return reject('Verification failed, please Login again.')
         }
-
-        const { name, avatar } = user_list
-
+        console.log(111)
+        const name = res.fullName
+        const avatar = null
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
-        resolve(user_list)
+        resolve(res)
       }).catch(error => {
         reject(error)
       })
